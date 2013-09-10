@@ -36,6 +36,13 @@ Basic Usage
     >>> print json_loaded
     {u'appearance': {u'eyes_color': u'black', u'hair_color': u'black', u'height': u'6'}, u'name': u'Vaidik Kapoor', u'location': u'Delhi, India'}
 
+Documentation
+=============
+
+Complete documentation can be found `here`_.
+
+.. _`here`: http://commentjson.readthedocs.org/en/latest/
+
 Tests
 =====
 
