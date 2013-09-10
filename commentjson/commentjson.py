@@ -14,7 +14,7 @@ class JSONLibraryException(Exception):
         tb = '\n'.join(' ' * 4 + line_ for line_ in tb.split('\n'))
         message = [
             'JSON Library Exception\n',
-            'Exception thrown by JSON library (json): %s\n' % json_error,
+            'Exception thrown by JSON library (json): \033[4;37m%s\033[0m\n' % json_error,
             '%s' % tb,
         ]
         Exception.__init__(self, '\n'.join(message))
