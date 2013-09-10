@@ -24,4 +24,5 @@ setup(name='commentjson',
       include_package_data=True,
       zip_safe=False,
       classifiers=classifiers,
-      install_requires=install_requires)
+      install_requires=install_requires,
+      test_suite='commentjson.tests')
