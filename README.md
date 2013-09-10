@@ -6,6 +6,12 @@ files with comments. Its API is very similar to the Python standard library's
 
 [json]: http://docs.python.org/2/library/json.html
 
+## Installation
+
+```
+pip install commentjson
+```
+
 ## Basic Usage
 
 ```python
@@ -28,7 +34,7 @@ files with comments. Its API is very similar to the Python standard library's
 {u'appearance': {u'eyes_color': u'black', u'hair_color': u'black', u'height': u'6'}, u'name': u'Vaidik Kapoor', u'location': u'Delhi, India'}
 ```
 
-# Tests
+## Tests
 
 ```
 python setup.py test
