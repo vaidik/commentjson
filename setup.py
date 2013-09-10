@@ -1,13 +1,16 @@
+import os
+
 from setuptools import setup, find_packages
 from commentjson import __version__
-import sys
+
 
 install_requires = []
 
 description = ''
 
+path = lambda fname: os.path.join(os.path.dirname(__file__), fname)
 for file_ in ('README',):
-    with open('%s.md' % file_) as f:
+    with open(path('%s.rst' % file_)) as f:
         description += f.read() + '\n\n'
 
 classifiers = ["Programming Language :: Python"]
