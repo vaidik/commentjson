@@ -8,6 +8,8 @@ files with comments. Its API is very similar to the Python standard library's
 
 .. _`json`: http://docs.python.org/2/library/json.html
 
+.. image:: https://travis-ci.org/vaidik/commentjson.png
+
 Installation
 ============
 
