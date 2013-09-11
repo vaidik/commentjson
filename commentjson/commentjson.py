@@ -1,4 +1,9 @@
-import json
+try:
+    import json
+except ImportError:
+    # If python version is 2.5 or less, use simplejson
+    import simplejson as json
+
 import re
 import traceback
 

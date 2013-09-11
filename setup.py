@@ -1,10 +1,16 @@
+from __future__ import with_statement
+
 import os
+import sys
 
 from setuptools import setup, find_packages
-from commentjson import __version__
 
+
+__version__ = '.'.join(map(str, (0, 2, 6)))
 
 install_requires = []
+if sys.version_info <= (2, 6):
+    install_requires.append('simplejson')
 
 description = ''
 
