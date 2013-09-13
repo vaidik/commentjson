@@ -42,7 +42,8 @@ def loads(text, **kwargs):
     :raises: commentjson.JSONLibraryException
     :returns: Python dict or list.
     '''
-    regex = r'( |\t)*#.*'
+    regex = r'( |\t)*#.*$'
+    regex_inline = r'(:?(?: |\t)*([A-Za-z\d\.{}]*)|(\".*\"),?)(?: |\t)*(#.*$)'
     lines = text.split('\n')
     excluded = []
 
@@ -50,8 +51,10 @@ def loads(text, **kwargs):
         if re.search(regex, lines[index]):
             if re.search(r'^' + regex, lines[index]):
                 excluded.append(lines[index])
-            else:
-                lines[index] = re.sub(regex, '', lines[index])
+            elif re.search(regex_inline,
+                           lines[index]):
+                lines[index] = re.sub(regex_inline,
+                                      r'\1', lines[index])
 
     for line in excluded:
         lines.remove(line)

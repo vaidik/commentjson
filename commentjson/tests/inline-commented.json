@@ -1,0 +1,7 @@
+{
+    "key1": 1, # testing this
+    "key2": "1", # testing this
+    "key3": 3,
+    "key4": 4.3, # testing float 
+    "key5": "5" # testing this
+}

@@ -1,12 +1,10 @@
 {
-    # A is supposed to be cool man
-    # B is supposed to be cool man
     "a": 1,
     "c": {
     # d is cool
         "d": "4.3",
         "e": {
-            "1": "1",
+            "1": "1 # testing", # test comment
             "2": "2", # some other stupid comment
             "3": "3"
         }

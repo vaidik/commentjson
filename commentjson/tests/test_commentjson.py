@@ -13,8 +13,10 @@ class TestCommentJson(unittest.TestCase):
     def setUp(self):
         self.test_json = {}
         self.path = os.path.dirname(os.path.abspath(__file__))
+        self.files = ('sample', 'line_comment', 'inline_last_float',
+                      'inline_last_int', 'nested_object', 'string_with_hash')
 
-        for file_ in ('sample',):
+        for file_ in self.files:
             fpath = os.path.join(self.path, file_)
             self.test_json.update({
                 file_: {
@@ -49,10 +51,10 @@ class TestCommentJson(unittest.TestCase):
                           Unserializable)
 
     def test_loads(self):
-        commented = self.test_json['sample']['commented']
-        uncommented = self.test_json['sample']['uncommented']
-
-        assert commentjson.loads(commented) == json.loads(uncommented)
+        for index, test_json_ in self.test_json.iteritems():
+            commented = test_json_['commented']
+            uncommented = test_json_['uncommented']
+            assert commentjson.loads(commented) == json.loads(uncommented)
 
     def test_loads_with_kwargs(self):
         def test_hook(loaded_dict):
@@ -105,10 +107,11 @@ class TestCommentJson(unittest.TestCase):
                           Unserializable, fp)
 
     def test_load(self):
-        rfp = open(os.path.join(self.path, 'sample-commented.json'), 'r')
-        uncommented = self.test_json['sample']['uncommented']
-
-        assert commentjson.load(rfp) == json.loads(uncommented)
+        for file_ in self.files:
+            rfp = open(os.path.join(self.path, '%s-commented.json' % file_),
+                       'r')
+            uncommented = self.test_json[file_]['uncommented']
+            assert commentjson.load(rfp) == json.loads(uncommented)
 
     def test_load_with_kwargs(self):
         def test_hook(loaded_dict):
