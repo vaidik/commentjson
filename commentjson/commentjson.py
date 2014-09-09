@@ -42,23 +42,13 @@ def loads(text, **kwargs):
     :raises: commentjson.JSONLibraryException
     :returns: Python dict or list.
     '''
-    regex = r'( |\t)*#.*$'
-    regex_inline = r'(:?(?: |\t)*([A-Za-z\d\.{}]*)|(\".*\"),?)(?: |\t)*(#.*$)'
+    regex_inline = r'("(?:[^"]+|(?<=\\)")*")|#[^\n]*'
     lines = text.split('\n')
-    excluded = []
 
     for index in xrange(len(lines)):
-        if re.search(regex, lines[index]):
-            if re.search(r'^' + regex, lines[index]):
-                excluded.append(lines[index])
-            elif re.search(regex_inline,
-                           lines[index]):
-                lines[index] = re.sub(regex_inline,
-                                      r'\1', lines[index])
-
-    for line in excluded:
-        lines.remove(line)
-
+        if re.search(regex_inline, lines[index]):
+            lines[index] = re.sub(regex_inline, lambda m: m.group(1) or '', lines[index])
+    lines = filter(None, lines) # fastest
     try:
         return json.loads('\n'.join(lines), **kwargs)
     except Exception, e:
