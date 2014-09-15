@@ -43,7 +43,7 @@ def loads(text, **kwargs):
     :returns: Python dict or list.
     '''
     regex_inline = r'("(?:[^"]+|(?<=\\)")*")|#[^\n]*'
-    lines = [re.sub(regex_inline, lambda m: m.group(1) or '', line) for line in text.split(u'\n'))]
+    lines = [re.sub(regex_inline, lambda m: m.group(1) or '', line) for line in text.split(u'\n')]
     lines = filter(None, lines)
     try:
         return json.loads('\n'.join(lines), **kwargs)
