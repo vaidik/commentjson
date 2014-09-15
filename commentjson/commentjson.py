@@ -43,12 +43,8 @@ def loads(text, **kwargs):
     :returns: Python dict or list.
     '''
     regex_inline = r'("(?:[^"]+|(?<=\\)")*")|#[^\n]*'
-    lines = text.split('\n')
-
-    for index in xrange(len(lines)):
-        if re.search(regex_inline, lines[index]):
-            lines[index] = re.sub(regex_inline, lambda m: m.group(1) or '', lines[index])
-    lines = filter(None, lines) # fastest
+    lines = [re.sub(regex_inline, lambda m: m.group(1) or '', line) for line in text.split(u'\n'))]
+    lines = filter(None, lines)
     try:
         return json.loads('\n'.join(lines), **kwargs)
     except Exception, e:
