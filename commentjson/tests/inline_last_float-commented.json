@@ -1,5 +1,8 @@
 {
     "key1": 1,
     "key2": "1",
-    "key3": 3.3 # testing comment
+    "key3": {
+        "key3.1": 3.3 // testing comment
+    },
+    "key3.2": 3.3 # testing comment
 }

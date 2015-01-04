@@ -34,16 +34,16 @@ class JSONLibraryException(Exception):
 
 def loads(text, **kwargs):
     ''' Deserialize `text` (a `str` or `unicode` instance containing a JSON
-    document with Python like comments) to a Python object.
+    document with Python or JavaScript like comments) to a Python object.
 
     :param text: serialized JSON string with or without comments.
     :param kwargs: all the arguments that `json.loads <http://docs.python.org/
                    2/library/json.html#json.loads>`_ accepts.
     :raises: commentjson.JSONLibraryException
-    :returns: Python dict or list.
+    :returns: dict or list.
     '''
-    regex = r'( |\t)*#.*$'
-    regex_inline = r'(:?(?: |\t)*([A-Za-z\d\.{}]*)|(\".*\"),?)(?: |\t)*(#.*$)'
+    regex = r'( |\t)*(#|(\/\/)).*$'
+    regex_inline = r'(:?(?: |\t)*([A-Za-z\d\.{}]*)|(\".*\"),?)(?: |\t)*((#|(\/\/)).*$)'
     lines = text.split('\n')
     excluded = []
 
@@ -84,14 +84,14 @@ def dumps(obj, **kwargs):
 
 def load(fp, **kwargs):
     ''' Deserialize `fp` (a `.read()`-supporting file-like object containing
-    a JSON document with Python like comments) to a Python object.
+    a JSON document with Python or JavaScript like comments) to a Python object.
 
     :param fp: a `.read()`-supporting file-like object containing a JSON
                document with or without comments.
     :param kwargs: all the arguments that `json.load <http://docs.python.org/
                    2/library/json.html#json.load>`_ accepts.
     :raises: commentjson.JSONLibraryException
-    :returns: Python dict or list.
+    :returns: dict or list.
     '''
 
     try:

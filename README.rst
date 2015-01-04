@@ -3,8 +3,8 @@ commentjson
 ===========
 
 `commentjson` (Comment JSON) is a Python package that helps you create JSON
-files with comments. Its API is very similar to the Python standard library's
-`json`_ module.
+files with Python and JavaScript style inline comments. Its API is very similar
+to the Python standard library's `json`_ module.
 
 .. _`json`: http://docs.python.org/2/library/json.html
 
@@ -24,9 +24,10 @@ Basic Usage
     >>>
     >>> json_string = """{
     ...     "name": "Vaidik Kapoor", # Person's name
-    ...     "location": "Delhi, India",
+    ...     "location": "Delhi, India", // Person's location
     ...
-    ...     # Section contains info about person's appearance
+    ...     # Section contains info about
+    ...     // person's appearance
     ...     "appearance": {
     ...         "hair_color": "black",
     ...         "eyes_color": "black",

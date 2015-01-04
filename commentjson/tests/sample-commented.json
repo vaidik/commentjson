@@ -1,13 +1,16 @@
 {
     "a": 1,
     "c": {
-    # d is cool
+        # d is cool
         "d": "4.3",
+        // e is cool
         "e": {
             "1": "1 # testing", # test comment
             "2": "2", # some other stupid comment
+            "2.2": "2", // some other stupid comment
             "3": "3"
-        }
+        },
+        "f": "some value" // some other stupid comment
     },
     "b": 2 # b inline comment
 }

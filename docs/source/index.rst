@@ -6,17 +6,18 @@
 commentjson - Add comments in JSON files
 ========================================
 
-``commentjson`` is a Python library that lets you have comments in your JSON
-files. Its API is very similar to the Python Standard library's
-`json <http://docs.python.org/2/library/json.html>`_ module.
+``commentjson`` is a Python library that lets you have Python and JavaScript
+style inline comments in your JSON files. Its API is very similar to the Python
+Standard library's `json <http://docs.python.org/2/library/json.html>`_ module.
 
 What does commentjson do?
 -------------------------
 
-``commentjson`` allows you to deserialize JSON files with Pythons style
-comments in them. ``commentjson``'s API is the same as the standard library's
-`json <http://docs.python.org/2/library/json.html>`_ module. If you are using
-or like using JSON for configuration files, ``commentjson`` can be very handy.
+``commentjson`` allows you to deserialize JSON files with Python and JavaScript
+style comments in them. ``commentjson``'s API is the same as the standard
+library's `json <http://docs.python.org/2/library/json.html>`_ module. If you
+are using or like using JSON for configuration files, ``commentjson`` can be
+very handy.
 
 You may put comments in your JSON files like so:
 
@@ -24,9 +25,10 @@ You may put comments in your JSON files like so:
 
     {
         "name": "Vaidik Kapoor", # Person's name
-        "location": "Delhi, India",
+        "location": "Delhi, India", // Person's location
 
-        # Section contains info about person's appearance
+        # Section contains info about
+        // person's appearance
         "appearance": {
             "hair_color": "black",
             "eyes_color": "black",
@@ -51,7 +53,8 @@ simple to use ``commentjson``. You don't have to do anything new to use
    `json <http://docs.python.org/2/library/json.html>`_ module or
    ``commentjson`` to create a new JSON file.
 2. Open the JSON file in your text editor and add comments the same way you
-   would in Python (using ``#`` and not docstrings).
+   would in Python (using ``#`` and not docstrings) or the same way you would
+   in JavaScript (using ``//`` and not multi-line comments using ``/** */``).
 3. Use ``commentjson``'s ``loads`` or ``load`` method to deserialize the file
    just like how you would use
    `json <http://docs.python.org/2/library/json.html>`_ module to parse a
@@ -64,9 +67,10 @@ simple to use ``commentjson``. You don't have to do anything new to use
    >>>
    >>> json_string = """{
    ...     "name": "Vaidik Kapoor", # Person's name
-   ...     "location": "Delhi, India",
+   ...     "location": "Delhi, India", // Person's location
    ...
-   ...     # Section contains info about person's appearance
+   ...     # Section contains info about
+   ...     // person's appearance
    ...     "appearance": {
    ...         "hair_color": "black",
    ...         "eyes_color": "black",

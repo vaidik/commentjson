@@ -6,7 +6,7 @@ import sys
 from setuptools import setup, find_packages
 
 
-__version__ = '.'.join(map(str, (0, 3)))
+__version__ = '.'.join(map(str, (0, 4)))
 
 install_requires = []
 if sys.version_info <= (2, 6):
@@ -27,7 +27,8 @@ setup(name='commentjson',
       url='https://github.com/vaidik/commentjson',
       packages=find_packages(),
       long_description=description,
-      description=("Add Python style comments in your JSON files."),
+      description=("Add Python and JavaScript style comments in your JSON "
+                   "files."),
       author="Vaidik Kapoor",
       author_email="kapoor.vaidik@gmail.com",
       include_package_data=True,
