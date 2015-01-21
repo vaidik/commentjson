@@ -50,3 +50,10 @@ Tests
 =====
 
     python setup.py test
+
+License
+=======
+
+See `license`_.
+
+.. _`license`: https://github.com/vaidik/commentjson/blob/master/LICENSE.rst
