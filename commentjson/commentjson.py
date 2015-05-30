@@ -47,14 +47,12 @@ def loads(text, **kwargs):
     lines = text.split('\n')
     excluded = []
 
-    for index in xrange(len(lines)):
-        if re.search(regex, lines[index]):
-            if re.search(r'^' + regex, lines[index]):
+    for index, line in enumerate(lines):
+        if re.search(regex, line):
+            if re.search(r'^' + regex, line, re.IGNORECASE):
                 excluded.append(lines[index])
-            elif re.search(regex_inline,
-                           lines[index]):
-                lines[index] = re.sub(regex_inline,
-                                      r'\1', lines[index])
+            elif re.search(regex_inline, line):
+                lines[index] = re.sub(regex_inline, r'\1', line)
 
     for line in excluded:
         lines.remove(line)
