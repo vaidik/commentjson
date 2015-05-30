@@ -26,7 +26,7 @@ class JSONLibraryException(Exception):
         message = [
             'JSON Library Exception\n',
             ('Exception thrown by JSON library (json): '
-            '\033[4;37m%s\033[0m\n' % json_error),
+             '\033[4;37m%s\033[0m\n' % json_error),
             '%s' % tb,
         ]
         Exception.__init__(self, '\n'.join(message))
