@@ -1,0 +1,11 @@
+{
+    "key1": "value1 is here", // Real comment
+    "key2": "value2 has a // included.", // Real comment
+    "key3": "value3 has a # included", // Real comment
+    "nested": // Real comment
+    {
+        "key4": "nested value4 is here", // Real comment
+        "key5": "nested value5 has a // included.", // Real comment
+        "key6": "nested value6 has a # included" // Real comment
+    } // Real comment
+}

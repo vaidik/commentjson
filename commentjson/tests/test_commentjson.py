@@ -14,7 +14,8 @@ class TestCommentJson(unittest.TestCase):
         self.test_json = {}
         self.path = os.path.dirname(os.path.abspath(__file__))
         self.files = ('sample', 'line_comment', 'inline_last_float',
-                      'inline_last_int', 'nested_object', 'string_with_hash')
+                      'inline_last_int', 'nested_object', 'string_with_hash',
+                      'string_with_inline_comment')
 
         for file_ in self.files:
             fpath = os.path.join(self.path, file_)

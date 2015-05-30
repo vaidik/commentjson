@@ -42,8 +42,8 @@ def loads(text, **kwargs):
     :raises: commentjson.JSONLibraryException
     :returns: dict or list.
     '''
-    regex = r'( |\t)*(#|(\/\/)).*$'
-    regex_inline = r'(:?(?: |\t)*([A-Za-z\d\.{}]*)|(\".*\"),?)(?: |\t)*((#|(\/\/)).*$)'
+    regex = r'\s*(#|\/{2}).*$'
+    regex_inline = r'(:?(?:\s)*([A-Za-z\d\.{}]*)|((?<=\").*\"),?)(?:\s)*(((#|(\/{2})).*)|)$'
     lines = text.split('\n')
     excluded = []
 
