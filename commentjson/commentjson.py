@@ -26,7 +26,7 @@ class JSONLibraryException(Exception):
         message = [
             'JSON Library Exception\n',
             ('Exception thrown by JSON library (json): '
-            '\033[4;37m%s\033[0m\n' % json_error),
+             '\033[4;37m%s\033[0m\n' % json_error),
             '%s' % tb,
         ]
         Exception.__init__(self, '\n'.join(message))
@@ -42,19 +42,17 @@ def loads(text, **kwargs):
     :raises: commentjson.JSONLibraryException
     :returns: dict or list.
     '''
-    regex = r'( |\t)*(#|(\/\/)).*$'
-    regex_inline = r'(:?(?: |\t)*([A-Za-z\d\.{}]*)|(\".*\"),?)(?: |\t)*((#|(\/\/)).*$)'
+    regex = r'\s*(#|\/{2}).*$'
+    regex_inline = r'(:?(?:\s)*([A-Za-z\d\.{}]*)|((?<=\").*\"),?)(?:\s)*(((#|(\/{2})).*)|)$'
     lines = text.split('\n')
     excluded = []
 
-    for index in xrange(len(lines)):
-        if re.search(regex, lines[index]):
-            if re.search(r'^' + regex, lines[index]):
+    for index, line in enumerate(lines):
+        if re.search(regex, line):
+            if re.search(r'^' + regex, line, re.IGNORECASE):
                 excluded.append(lines[index])
-            elif re.search(regex_inline,
-                           lines[index]):
-                lines[index] = re.sub(regex_inline,
-                                      r'\1', lines[index])
+            elif re.search(regex_inline, line):
+                lines[index] = re.sub(regex_inline, r'\1', line)
 
     for line in excluded:
         lines.remove(line)

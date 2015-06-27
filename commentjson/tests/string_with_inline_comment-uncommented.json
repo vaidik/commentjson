@@ -1,0 +1,11 @@
+{
+    "key1": "value1 is here",
+    "key2": "value2 has a // included.",
+    "key3": "value3 has a # included",
+    "nested":
+    {
+        "key4": "nested value4 is here",
+        "key5": "nested value5 has a // included.",
+        "key6": "nested value6 has a # included"
+    }
+}
