@@ -1,5 +1,6 @@
-from commentjson import dump
-from commentjson import dumps
-from commentjson import JSONLibraryException
-from commentjson import load
-from commentjson import loads
+__all__ = ['dump', 'dumps', 'load', 'loads', 'JSONLibraryException']
+
+try: # for python 2.x
+	from commentjson import dump, dumps, load, loads, JSONLibraryException
+except ImportError: # python 3.x
+	from .commentjson import dump, dumps, load, loads, JSONLibraryException
