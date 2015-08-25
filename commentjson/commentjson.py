@@ -45,17 +45,13 @@ def loads(text, **kwargs):
     regex = r'\s*(#|\/{2}).*$'
     regex_inline = r'(:?(?:\s)*([A-Za-z\d\.{}]*)|((?<=\").*\"),?)(?:\s)*(((#|(\/{2})).*)|)$'
     lines = text.split('\n')
-    excluded = []
 
     for index, line in enumerate(lines):
         if re.search(regex, line):
             if re.search(r'^' + regex, line, re.IGNORECASE):
-                excluded.append(lines[index])
+                lines[index] = ""
             elif re.search(regex_inline, line):
                 lines[index] = re.sub(regex_inline, r'\1', line)
-
-    for line in excluded:
-        lines.remove(line)
 
     try:
         return json.loads('\n'.join(lines), **kwargs)
