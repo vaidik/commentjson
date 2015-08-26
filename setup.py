@@ -6,7 +6,7 @@ import sys
 from setuptools import setup, find_packages
 
 
-__version__ = '.'.join(map(str, (0, 5)))
+__version__ = '.'.join(map(str, (0, 6)))
 
 install_requires = []
 if sys.version_info <= (2, 6):
