@@ -1,11 +1,25 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""Add JavaScript or Python style comments in JSON.
+
+commentjson (Comment JSON) is a Python package that helps you create JSON files
+with Python and JavaScript style inline comments. Its API is very similar to
+the Python standard library’s json module.
+
+"""
+
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
+from __future__ import unicode_literals
+import re
+import traceback
+
 try:
     import json
 except ImportError:
     # If python version is 2.5 or less, use simplejson
     import simplejson as json
-
-import re
-import traceback
 
 
 class JSONLibraryException(Exception):
@@ -55,7 +69,7 @@ def loads(text, **kwargs):
 
     try:
         return json.loads('\n'.join(lines), **kwargs)
-    except Exception, e:
+    except Exception as e:
         raise JSONLibraryException(e.message)
 
 
@@ -72,13 +86,13 @@ def dumps(obj, **kwargs):
 
     try:
         return json.dumps(obj, **kwargs)
-    except Exception, e:
+    except Exception as e:
         raise JSONLibraryException(e.message)
 
 
 def load(fp, **kwargs):
-    ''' Deserialize `fp` (a `.read()`-supporting file-like object containing
-    a JSON document with Python or JavaScript like comments) to a Python object.
+    ''' Deserialize `fp` (a `.read()`-supporting file-like object containing a
+    JSON document with Python or JavaScript like comments) to a Python object.
 
     :param fp: a `.read()`-supporting file-like object containing a JSON
                document with or without comments.
@@ -90,7 +104,7 @@ def load(fp, **kwargs):
 
     try:
         return loads(fp.read(), **kwargs)
-    except Exception, e:
+    except Exception as e:
         raise JSONLibraryException(e.message)
 
 
@@ -109,5 +123,5 @@ def dump(obj, fp, **kwargs):
 
     try:
         json.dump(obj, fp, **kwargs)
-    except Exception, e:
+    except Exception as e:
         raise JSONLibraryException(e.message)
