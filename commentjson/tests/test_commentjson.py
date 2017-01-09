@@ -52,7 +52,7 @@ class TestCommentJson(unittest.TestCase):
                           Unserializable)
 
     def test_loads(self):
-        for index, test_json_ in self.test_json.iteritems():
+        for index, test_json_ in self.test_json.items():
             commented = test_json_['commented']
             uncommented = test_json_['uncommented']
             assert commentjson.loads(commented) == json.loads(uncommented)
