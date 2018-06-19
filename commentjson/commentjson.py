@@ -34,16 +34,26 @@ class JSONLibraryException(Exception):
         libraries in the future.
     '''
 
-    def __init__(self, json_error=""):
+    def __init__(self, exc):
         tb = traceback.format_exc()
         tb = '\n'.join(' ' * 4 + line_ for line_ in tb.split('\n'))
-        message = [
+
+        json_error = None
+        try:
+            json_error = exc.msg
+        except AttributeError:
+            try:
+                json_error = exc.message
+            except AttributeError:
+                json_error = str(exc)
+
+        self.message = '\n'.join([
             'JSON Library Exception\n',
             ('Exception thrown by JSON library (json): '
              '\033[4;37m%s\033[0m\n' % json_error),
             '%s' % tb,
-        ]
-        Exception.__init__(self, '\n'.join(message))
+        ])
+        Exception.__init__(self, self.message)
 
 
 def loads(text, **kwargs):
@@ -70,7 +80,7 @@ def loads(text, **kwargs):
     try:
         return json.loads('\n'.join(lines), **kwargs)
     except Exception as e:
-        raise JSONLibraryException(e.message)
+        raise JSONLibraryException(e)
 
 
 def dumps(obj, **kwargs):
@@ -87,8 +97,7 @@ def dumps(obj, **kwargs):
     try:
         return json.dumps(obj, **kwargs)
     except Exception as e:
-        raise JSONLibraryException(e.message)
-
+        raise JSONLibraryException(e)
 
 def load(fp, **kwargs):
     ''' Deserialize `fp` (a `.read()`-supporting file-like object containing a
@@ -105,7 +114,7 @@ def load(fp, **kwargs):
     try:
         return loads(fp.read(), **kwargs)
     except Exception as e:
-        raise JSONLibraryException(e.message)
+        raise JSONLibraryException(e)
 
 
 def dump(obj, fp, **kwargs):
@@ -124,4 +133,4 @@ def dump(obj, fp, **kwargs):
     try:
         json.dump(obj, fp, **kwargs)
     except Exception as e:
-        raise JSONLibraryException(e.message)
+        raise JSONLibraryException(e)
