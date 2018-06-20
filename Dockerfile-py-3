@@ -1,0 +1,5 @@
+FROM python:3
+
+WORKDIR /commentjson
+
+RUN pip install pytz coverage ipython ipdb
