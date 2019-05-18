@@ -1,0 +1,9 @@
+{
+    "tags": [{
+        "id": "123",
+        "name": "Airport",
+        "name_en": "Airport",
+        "name_cn": "机场",  # Has special characters
+        "display": false
+    }]
+}

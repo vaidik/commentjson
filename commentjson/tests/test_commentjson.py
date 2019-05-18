@@ -17,7 +17,8 @@ class TestCommentJson(unittest.TestCase):
         self.path = os.path.dirname(os.path.abspath(__file__))
         self.files = ('sample', 'line_comment', 'inline_last_float',
                       'inline_last_int', 'nested_object', 'string_with_hash',
-                      'string_with_inline_comment')
+                      'string_with_inline_comment',
+                      'inline_has_special_characters')
 
         for file_ in self.files:
             fpath = os.path.join(self.path, file_)
@@ -57,7 +58,8 @@ class TestCommentJson(unittest.TestCase):
         for index, test_json_ in iteritems(self.test_json):
             commented = test_json_['commented']
             uncommented = test_json_['uncommented']
-            assert commentjson.loads(commented) == json.loads(uncommented)
+            self.assertEqual(commentjson.loads(commented),
+                json.loads(uncommented))
 
     def test_loads_with_kwargs(self):
         def test_hook(loaded_dict):

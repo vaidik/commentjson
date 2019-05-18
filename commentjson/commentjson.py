@@ -12,7 +12,9 @@ from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
 from __future__ import unicode_literals
+
 import re
+import six
 import traceback
 
 try:
@@ -66,6 +68,10 @@ def loads(text, **kwargs):
     :raises: commentjson.JSONLibraryException
     :returns: dict or list.
     '''
+
+    if six.PY2:
+        text = six.text_type(text, 'utf-8')
+
     regex = r'\s*(#|\/{2}).*$'
     regex_inline = r'(:?(?:\s)*([A-Za-z\d\.{}]*)|((?<=\").*\"),?)(?:\s)*(((#|(\/{2})).*)|)$'
     lines = text.split('\n')
@@ -98,6 +104,7 @@ def dumps(obj, **kwargs):
         return json.dumps(obj, **kwargs)
     except Exception as e:
         raise JSONLibraryException(e)
+
 
 def load(fp, **kwargs):
     ''' Deserialize `fp` (a `.read()`-supporting file-like object containing a
