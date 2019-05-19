@@ -22,10 +22,16 @@ class TestCommentJson(unittest.TestCase):
 
         for file_ in self.files:
             fpath = os.path.join(self.path, file_)
+
+            with open('%s-uncommented.json' % fpath) as fp:
+                uncommented = fp.read()
+            with open('%s-commented.json' % fpath) as fp:
+                commented = fp.read()
+
             self.test_json.update({
                 file_: {
-                    'uncommented': open('%s-uncommented.json' % fpath).read(),
-                    'commented': open('%s-commented.json' % fpath).read(),
+                    'uncommented': uncommented,
+                    'commented': commented,
                 },
             })
 
@@ -110,6 +116,7 @@ class TestCommentJson(unittest.TestCase):
         fp = open(os.path.join(self.path, 'test.json'), 'w')
         self.assertRaises(commentjson.JSONLibraryException, commentjson.dump,
                           Unserializable, fp)
+        fp.close()
 
     def test_load(self):
         for file_ in self.files:
@@ -117,15 +124,17 @@ class TestCommentJson(unittest.TestCase):
                        'r')
             uncommented = self.test_json[file_]['uncommented']
             assert commentjson.load(rfp) == json.loads(uncommented)
+            rfp.close()
 
     def test_load_with_kwargs(self):
         def test_hook(loaded_dict):
             return {}
+
         test_kwargs = dict(object_hook=test_hook)
         rfp = open(os.path.join(self.path, 'sample-commented.json'), 'r')
-        uncommented = self.test_json['sample']['uncommented']
 
         assert commentjson.load(rfp, **test_kwargs) == {}
+        rfp.close()
 
     def test_load_throws_exception(self):
         wfp = open(os.path.join(self.path, 'test.json'), 'w')
@@ -135,6 +144,7 @@ class TestCommentJson(unittest.TestCase):
         rfp = open(os.path.join(self.path, 'test.json'), 'r')
         self.assertRaises(commentjson.JSONLibraryException, commentjson.load,
                           rfp)
+        rfp.close()
 
 
 if __name__ == '__main__':
