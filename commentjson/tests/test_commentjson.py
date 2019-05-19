@@ -17,14 +17,21 @@ class TestCommentJson(unittest.TestCase):
         self.path = os.path.dirname(os.path.abspath(__file__))
         self.files = ('sample', 'line_comment', 'inline_last_float',
                       'inline_last_int', 'nested_object', 'string_with_hash',
-                      'string_with_inline_comment')
+                      'string_with_inline_comment',
+                      'inline_has_special_characters')
 
         for file_ in self.files:
             fpath = os.path.join(self.path, file_)
+
+            with open('%s-uncommented.json' % fpath) as fp:
+                uncommented = fp.read()
+            with open('%s-commented.json' % fpath) as fp:
+                commented = fp.read()
+
             self.test_json.update({
                 file_: {
-                    'uncommented': open('%s-uncommented.json' % fpath).read(),
-                    'commented': open('%s-commented.json' % fpath).read(),
+                    'uncommented': uncommented,
+                    'commented': commented,
                 },
             })
 
@@ -57,7 +64,8 @@ class TestCommentJson(unittest.TestCase):
         for index, test_json_ in iteritems(self.test_json):
             commented = test_json_['commented']
             uncommented = test_json_['uncommented']
-            assert commentjson.loads(commented) == json.loads(uncommented)
+            self.assertEqual(commentjson.loads(commented),
+                json.loads(uncommented))
 
     def test_loads_with_kwargs(self):
         def test_hook(loaded_dict):
@@ -108,6 +116,7 @@ class TestCommentJson(unittest.TestCase):
         fp = open(os.path.join(self.path, 'test.json'), 'w')
         self.assertRaises(commentjson.JSONLibraryException, commentjson.dump,
                           Unserializable, fp)
+        fp.close()
 
     def test_load(self):
         for file_ in self.files:
@@ -115,15 +124,17 @@ class TestCommentJson(unittest.TestCase):
                        'r')
             uncommented = self.test_json[file_]['uncommented']
             assert commentjson.load(rfp) == json.loads(uncommented)
+            rfp.close()
 
     def test_load_with_kwargs(self):
         def test_hook(loaded_dict):
             return {}
+
         test_kwargs = dict(object_hook=test_hook)
         rfp = open(os.path.join(self.path, 'sample-commented.json'), 'r')
-        uncommented = self.test_json['sample']['uncommented']
 
         assert commentjson.load(rfp, **test_kwargs) == {}
+        rfp.close()
 
     def test_load_throws_exception(self):
         wfp = open(os.path.join(self.path, 'test.json'), 'w')
@@ -133,6 +144,7 @@ class TestCommentJson(unittest.TestCase):
         rfp = open(os.path.join(self.path, 'test.json'), 'r')
         self.assertRaises(commentjson.JSONLibraryException, commentjson.load,
                           rfp)
+        rfp.close()
 
 
 if __name__ == '__main__':
