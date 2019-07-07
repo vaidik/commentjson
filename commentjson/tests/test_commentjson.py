@@ -18,7 +18,9 @@ class TestCommentJson(unittest.TestCase):
         self.files = ('sample', 'line_comment', 'inline_last_float',
                       'inline_last_int', 'nested_object', 'string_with_hash',
                       'string_with_inline_comment',
-                      'inline_has_special_characters')
+                      'inline_has_special_characters',
+                      'array_with_hash',
+                      'inline_last_quote')
 
         for file_ in self.files:
             fpath = os.path.join(self.path, file_)
@@ -39,6 +41,13 @@ class TestCommentJson(unittest.TestCase):
         test_file_path = os.path.join(self.path, 'test.json')
         if os.path.exists(test_file_path):
             os.unlink(test_file_path)
+
+    def test_dumping_parsing_simple_string(self):
+        string = '//'
+        self.assertEqual(commentjson.loads(commentjson.dumps(string)), string)
+
+        string = '#'
+        self.assertEqual(commentjson.loads(commentjson.dumps(string)), string)
 
     def test_dumps(self):
         test_dict = dict(a=1, b=2)
@@ -64,14 +73,15 @@ class TestCommentJson(unittest.TestCase):
         for index, test_json_ in iteritems(self.test_json):
             commented = test_json_['commented']
             uncommented = test_json_['uncommented']
-            self.assertEqual(commentjson.loads(commented),
-                json.loads(uncommented))
+            self.assertEqual(
+                commentjson.loads(commented),
+                json.loads(uncommented),
+                'Failed for test: %s' % test_json_['commented'])
 
     def test_loads_with_kwargs(self):
         def test_hook(loaded_dict):
             return {}
         commented = self.test_json['sample']['commented']
-        uncommented = self.test_json['sample']['uncommented']
         test_kwargs = dict(object_hook=test_hook)
 
         c_load = commentjson.loads(commented, **test_kwargs)
@@ -80,14 +90,14 @@ class TestCommentJson(unittest.TestCase):
         assert c_load == {}
 
     def test_loads_throws_exception(self):
-        self.assertRaises(commentjson.JSONLibraryException, commentjson.loads,
+        self.assertRaises(commentjson.ParserException, commentjson.loads,
                           'Unserializable text')
 
     def test_dump(self):
         test_dict = dict(a=1, b=2)
 
         wfp = open(os.path.join(self.path, 'test.json'), 'w')
-        c_dump = commentjson.dump(test_dict, wfp)
+        commentjson.dump(test_dict, wfp)
         wfp.close()
 
         rfp = open(os.path.join(self.path, 'test.json'), 'r')
@@ -101,13 +111,14 @@ class TestCommentJson(unittest.TestCase):
         test_kwargs = dict(indent=4)
 
         wfp = open(os.path.join(self.path, 'test.json'), 'w')
-        c_dump = commentjson.dump(test_dict, wfp, **test_kwargs)
+        commentjson.dump(test_dict, wfp, **test_kwargs)
         wfp.close()
 
         rfp = open(os.path.join(self.path, 'test.json'), 'r')
         j_dump = json.dumps(test_dict, **test_kwargs)
+        c_dump = rfp.read()
 
-        assert rfp.read(), j_dump
+        assert c_dump == j_dump, c_dump
         rfp.close()
 
     def test_dump_throws_exception(self):
@@ -133,7 +144,7 @@ class TestCommentJson(unittest.TestCase):
         test_kwargs = dict(object_hook=test_hook)
         rfp = open(os.path.join(self.path, 'sample-commented.json'), 'r')
 
-        assert commentjson.load(rfp, **test_kwargs) == {}
+        self.assertEqual(commentjson.load(rfp, **test_kwargs), {})
         rfp.close()
 
     def test_load_throws_exception(self):

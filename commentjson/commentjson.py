@@ -24,10 +24,87 @@ except ImportError:
     import simplejson as json
 
 
-class JSONLibraryException(Exception):
-    ''' Exception raised when the JSON library in use raises an exception i.e.
-    the exception is not caused by `commentjson` and only caused by the JSON
-    library `commentjson` is using.
+import lark
+
+from lark import Lark
+from lark.reconstruct import Reconstructor
+
+
+parser = Lark('''
+    ?start: value
+    ?value: object
+          | array
+          | string
+          | SIGNED_NUMBER      -> number
+          | "true"             -> true
+          | "false"            -> false
+          | "null"             -> null
+    array  : "[" [value ("," value)*] "]"
+    object : "{" [pair ("," pair)*] "}"
+    pair   : string ":" value
+    string : ESCAPED_STRING
+
+    COMMENT: /(#|\/\/)[^\\n]*/
+
+    %import common.ESCAPED_STRING
+    %import common.SIGNED_NUMBER
+    %import common.WS
+    %ignore WS
+    %ignore COMMENT
+''', start='start')
+
+serializer = Reconstructor(parser)
+
+
+class BaseException(Exception):
+    ''' Base exception to be implemented and raised while handling exceptions
+    raised by libraries used in `commentjson`.
+
+    Sets message of self in a way that it clearly calls out that the exception
+    was raised by another library, along with the entire stacktrace of the
+    exception raised by the other library.
+    '''
+
+    def __init__(self, exc):
+        if self.library is None:
+            raise NotImplementedError(
+                'Value of library must be set in the '
+                'inherited exception class.')
+
+        tb = traceback.format_exc()
+        tb = '\n'.join(' ' * 4 + line_ for line_ in tb.split('\n'))
+
+        error = None
+        try:
+            error = exc.msg
+        except AttributeError:
+            try:
+                error = exc.message
+            except AttributeError:
+                error = str(exc)
+
+        self.message = '\n'.join([
+            'JSON Library Exception\n',
+            ('Exception thrown by library (%s): '
+             '\033[4;37m%s\033[0m\n' % (self.library, error)),
+            '%s' % tb,
+        ])
+        Exception.__init__(self, self.message)
+
+
+class ParserException(BaseException):
+    '''Exception raised when the `lark` raises an exception i.e.
+    the exception is not caused by `commentjson` and caused by the use of
+    `lark` in `commentjson`.
+    '''
+
+    library = 'lark'
+
+
+class JSONLibraryException(BaseException):
+    '''Exception raised when the `json` raises an exception i.e.
+    the exception is not caused by `commentjson` and caused by the use of
+    `json` in `commentjson`.
 
     .. note::
 
@@ -36,26 +113,7 @@ class JSONLibraryException(Exception):
         libraries in the future.
     '''
 
-    def __init__(self, exc):
-        tb = traceback.format_exc()
-        tb = '\n'.join(' ' * 4 + line_ for line_ in tb.split('\n'))
-
-        json_error = None
-        try:
-            json_error = exc.msg
-        except AttributeError:
-            try:
-                json_error = exc.message
-            except AttributeError:
-                json_error = str(exc)
-
-        self.message = '\n'.join([
-            'JSON Library Exception\n',
-            ('Exception thrown by JSON library (json): '
-             '\033[4;37m%s\033[0m\n' % json_error),
-            '%s' % tb,
-        ])
-        Exception.__init__(self, self.message)
+    library = 'json'
 
 
 def loads(text, **kwargs):
@@ -65,7 +123,6 @@ def loads(text, **kwargs):
     :param text: serialized JSON string with or without comments.
     :param kwargs: all the arguments that `json.loads <http://docs.python.org/
                    2/library/json.html#json.loads>`_ accepts.
-    :raises: commentjson.JSONLibraryException
     :returns: dict or list.
     '''
 
@@ -84,7 +141,13 @@ def loads(text, **kwargs):
                 lines[index] = re.sub(regex_inline, r'\1', line)
 
     try:
-        return json.loads('\n'.join(lines), **kwargs)
+        parsed = parser.parse(text)
+        final_text = serializer.reconstruct(parsed)
+    except lark.exceptions.UnexpectedCharacters:
+        raise ParserException('Unable to parse text')
+
+    try:
+        return json.loads(final_text, **kwargs)
     except Exception as e:
         raise JSONLibraryException(e)
 

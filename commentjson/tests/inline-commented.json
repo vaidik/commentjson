@@ -1,8 +1,8 @@
 {
     "key1": 1, # testing this
     "key1.2": 1, // testing this
-    "key2": "1", # testing this
-    "key2.2": "1", // testing this
+    "key2": "1", # testing this ending with quote "
+    "key2.2": "1", // testing this ending with quote "
     "key3": 3,
     "key4": 4.3, # testing float 
     "key4.2": 4.3, // testing float 
