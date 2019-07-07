@@ -67,7 +67,7 @@ class TestCommentJson(unittest.TestCase):
             self.assertEqual(
                 commentjson.loads(commented),
                 json.loads(uncommented),
-                'Failed for test: %s', test_json_['commented'])
+                'Failed for test: %s' % test_json_['commented'])
 
     def test_loads_with_kwargs(self):
         def test_hook(loaded_dict):
@@ -107,8 +107,9 @@ class TestCommentJson(unittest.TestCase):
 
         rfp = open(os.path.join(self.path, 'test.json'), 'r')
         j_dump = json.dumps(test_dict, **test_kwargs)
+        c_dump = rfp.read()
 
-        assert rfp.read(), j_dump
+        assert c_dump == j_dump, c_dump
         rfp.close()
 
     def test_dump_throws_exception(self):
@@ -134,7 +135,6 @@ class TestCommentJson(unittest.TestCase):
         test_kwargs = dict(object_hook=test_hook)
         rfp = open(os.path.join(self.path, 'sample-commented.json'), 'r')
 
-        assert commentjson.load(rfp, **test_kwargs) == {}
         self.assertEqual(commentjson.load(rfp, **test_kwargs), {})
         rfp.close()
 

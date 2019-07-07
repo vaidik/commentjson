@@ -24,11 +24,13 @@ except ImportError:
     import simplejson as json
 
 
+import lark
+
 from lark import Lark
 from lark.reconstruct import Reconstructor
 
 parser = Lark(r"""
-    value: /\[|\{/ NEWLINE line /\]|\}/ NEWLINE?
+    value: /\[|\{/ NEWLINE? line /\]|\}/ NEWLINE?
 
     line: line2 ("," NEWLINE line2)* NEWLINE?
 
@@ -49,6 +51,29 @@ parser = Lark(r"""
     %import common.NEWLINE
     %import common.ESCAPED_STRING
     """, start='value')
+
+parser = Lark('''
+    ?start: value
+    ?value: object
+          | array
+          | string
+          | SIGNED_NUMBER      -> number
+          | "true"             -> true
+          | "false"            -> false
+          | "null"             -> null
+    array  : "[" [value ("," value)*] "]"
+    object : "{" [pair ("," pair)*] "}"
+    pair   : string ":" value
+    string : ESCAPED_STRING
+
+    COMMENT: /(#|\/\/)[^\\n]*/
+
+    %import common.ESCAPED_STRING
+    %import common.SIGNED_NUMBER
+    %import common.WS
+    %ignore WS
+    %ignore COMMENT
+''', start='start')
 
 serializer = Reconstructor(parser)
 
@@ -117,17 +142,17 @@ def loads(text, **kwargs):
                 lines[index] = ""
             elif re.search(regex_inline, line):
                 lines[index] = re.sub(regex_inline, r'\1', line)
-    
-    parsed = parser.parse(text)
-    print(parsed)
-    final_text = serializer.reconstruct(parsed)
-    print(text)
-    print(final_text)
-    return json.loads(final_text, **kwargs)
-    #try:
-    #    return json.loads('\n'.join(lines), **kwargs)
-    #except Exception as e:
-    #    raise JSONLibraryException(e)
+
+    try:
+        parsed = parser.parse(text)
+        final_text = serializer.reconstruct(parsed)
+    except lark.exceptions.UnexpectedCharacters:
+        raise JSONLibraryException('Unable to parse text')
+
+    try:
+        return json.loads(final_text, **kwargs)
+    except Exception as e:
+        raise JSONLibraryException(e)
 
 
 def dumps(obj, **kwargs):
