@@ -1,0 +1,10 @@
+{
+    "a": ["1", "2"], # comment
+    "c": [], # comment,
+    "d": [ # comment
+        1, # comment
+        "123", # comment
+        "123#4", # comment
+        [] # comment
+    ]
+}
