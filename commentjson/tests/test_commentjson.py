@@ -64,14 +64,15 @@ class TestCommentJson(unittest.TestCase):
         for index, test_json_ in iteritems(self.test_json):
             commented = test_json_['commented']
             uncommented = test_json_['uncommented']
-            self.assertEqual(commentjson.loads(commented),
-                json.loads(uncommented))
+            self.assertEqual(
+                commentjson.loads(commented),
+                json.loads(uncommented),
+                'Failed for test: %s', test_json_['commented'])
 
     def test_loads_with_kwargs(self):
         def test_hook(loaded_dict):
             return {}
         commented = self.test_json['sample']['commented']
-        uncommented = self.test_json['sample']['uncommented']
         test_kwargs = dict(object_hook=test_hook)
 
         c_load = commentjson.loads(commented, **test_kwargs)
@@ -87,7 +88,7 @@ class TestCommentJson(unittest.TestCase):
         test_dict = dict(a=1, b=2)
 
         wfp = open(os.path.join(self.path, 'test.json'), 'w')
-        c_dump = commentjson.dump(test_dict, wfp)
+        commentjson.dump(test_dict, wfp)
         wfp.close()
 
         rfp = open(os.path.join(self.path, 'test.json'), 'r')
@@ -101,7 +102,7 @@ class TestCommentJson(unittest.TestCase):
         test_kwargs = dict(indent=4)
 
         wfp = open(os.path.join(self.path, 'test.json'), 'w')
-        c_dump = commentjson.dump(test_dict, wfp, **test_kwargs)
+        commentjson.dump(test_dict, wfp, **test_kwargs)
         wfp.close()
 
         rfp = open(os.path.join(self.path, 'test.json'), 'r')
@@ -134,6 +135,7 @@ class TestCommentJson(unittest.TestCase):
         rfp = open(os.path.join(self.path, 'sample-commented.json'), 'r')
 
         assert commentjson.load(rfp, **test_kwargs) == {}
+        self.assertEqual(commentjson.load(rfp, **test_kwargs), {})
         rfp.close()
 
     def test_load_throws_exception(self):

@@ -24,6 +24,41 @@ except ImportError:
     import simplejson as json
 
 
+from lark import Lark
+from lark.reconstruct import Reconstructor
+
+parser = Lark(r"""
+    value: /\[|\{/ NEWLINE line /\]|\}/ NEWLINE?
+
+    line: line2 ("," NEWLINE line2)* NEWLINE?
+
+    line2: string ":" (string | non_quote_char*)
+
+    char: /[^\n]/
+    non_quote_char: /[^\n\"]/
+    key: "\"" non_quote_char* "\""
+    string: ESCAPED_STRING
+
+    _NEWLINE: ( COMMENT NEWLINE | NEWLINE )+
+    COMMENT: /(#|\/\/)[^\n]*/
+
+    %ignore WS_INLINE
+    %ignore COMMENT
+
+    %import common.WS_INLINE
+    %import common.NEWLINE
+    %import common.ESCAPED_STRING
+    """, start='value')
+
+serializer = Reconstructor(parser)
+
+'''
+"asd": 1            // OK
+"asd # 3434": 1     // NOT WORKING
+"sad": "1 # 23123"  // NOT WORKING
+'''
+
+
 class JSONLibraryException(Exception):
     ''' Exception raised when the JSON library in use raises an exception i.e.
     the exception is not caused by `commentjson` and only caused by the JSON
@@ -82,11 +117,17 @@ def loads(text, **kwargs):
                 lines[index] = ""
             elif re.search(regex_inline, line):
                 lines[index] = re.sub(regex_inline, r'\1', line)
-
-    try:
-        return json.loads('\n'.join(lines), **kwargs)
-    except Exception as e:
-        raise JSONLibraryException(e)
+    
+    parsed = parser.parse(text)
+    print(parsed)
+    final_text = serializer.reconstruct(parsed)
+    print(text)
+    print(final_text)
+    return json.loads(final_text, **kwargs)
+    #try:
+    #    return json.loads('\n'.join(lines), **kwargs)
+    #except Exception as e:
+    #    raise JSONLibraryException(e)
 
 
 def dumps(obj, **kwargs):
