@@ -42,6 +42,13 @@ class TestCommentJson(unittest.TestCase):
         if os.path.exists(test_file_path):
             os.unlink(test_file_path)
 
+    def test_dumping_parsing_simple_string(self):
+        string = '//'
+        self.assertEqual(commentjson.loads(commentjson.dumps(string)), string)
+
+        string = '#'
+        self.assertEqual(commentjson.loads(commentjson.dumps(string)), string)
+
     def test_dumps(self):
         test_dict = dict(a=1, b=2)
         c_dump = commentjson.dumps(test_dict)
