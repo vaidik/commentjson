@@ -2,13 +2,13 @@ language: python
 
 matrix:
   include:
-    - name: "Python 2.7 on Xenial Linux"
+    - name: "Python 2.6 on Trusty"
       python: 2.6
       dist: trusty
-    - name: "Python 2.7 on Xenial Linux"
+    - name: "Python 2.7 on Precise"
       python: 2.7
       dist: precise
-    - name: "Python 3.3 on Xenial Linux"
+    - name: "Python 3.3 on Trusty"
       python: 3.3
       dist: trusty
     - name: "Python 3.4 on Xenial Linux"
