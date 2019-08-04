@@ -5,12 +5,6 @@ matrix:
     - name: "Python 2.7 on Precise"
       python: 2.7
       dist: precise
-    - name: "Python 3.3 on Trusty"
-      python: 3.3
-      dist: trusty
-    - name: "Python 3.4 on Xenial Linux"
-      python: 3.4
-      dist: xenial
     - name: "Python 3.5 on Xenial Linux"
       python: 3.5
       dist: xenial
@@ -20,11 +14,16 @@ matrix:
     - name: "Python 3.7 on Xenial Linux"
       python: 3.7
       dist: xenial
+    - name: "Python 3.7 on Bionic Linux"
+      python: 3.7
+      dist: bionic
     - name: "Python 3.7.2 on macOS"
+      python: 3.7.2
       os: osx
       osx_image: xcode10.2
       language: shell
     - name: "Python 3.7 on Windows"
+      python: 3.7
       os: windows
       language: shell
       before_install: choco install python
