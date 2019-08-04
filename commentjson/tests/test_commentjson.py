@@ -66,7 +66,7 @@ class TestCommentJson(unittest.TestCase):
     def test_dumps_throws_exception(self):
         class Unserializable:
             pass
-        self.assertRaises(commentjson.JSONLibraryException, commentjson.dumps,
+        self.assertRaises(TypeError, commentjson.dumps,
                           Unserializable)
 
     def test_loads(self):
@@ -90,7 +90,7 @@ class TestCommentJson(unittest.TestCase):
         assert c_load == {}
 
     def test_loads_throws_exception(self):
-        self.assertRaises(commentjson.ParserException, commentjson.loads,
+        self.assertRaises(ValueError, commentjson.loads,
                           'Unserializable text')
 
     def test_dump(self):
