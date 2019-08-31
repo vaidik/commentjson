@@ -1,9 +1,16 @@
 {
-    "tags": [{
-        "id": "123",
-        "name": "Airport",
-        "name_en": "Airport",
-        "name_cn": "机场",  # Has special characters
-        "display": false
-    }]
+    "tags": [
+        {
+            "id": "123",
+            "name": "Airport",
+            "name_en": "Airport",
+            "name_cn": "机场",  # Has special characters
+            "display": false
+        },
+        {
+            "url": "text",
+            "valueString": "ID for spørgeskemabesvarelse", # Danish
+            "bn-BD": "আমার সোনার বাংলা"  // Bengali
+        }
+    ]
 }

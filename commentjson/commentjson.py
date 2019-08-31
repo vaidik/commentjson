@@ -13,8 +13,7 @@ from __future__ import division
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
-import re
-import six
+import codecs
 import traceback
 
 try:
@@ -54,6 +53,42 @@ parser = Lark('''
 ''')
 
 serializer = Reconstructor(parser)
+
+
+def detect_encoding(b):
+    '''
+    Taken from `json` package in CPython 3.7.
+
+    Source can be found at https://bit.ly/2OHqCIK.
+    '''
+
+    bstartswith = b.startswith
+    if bstartswith((codecs.BOM_UTF32_BE, codecs.BOM_UTF32_LE)):
+        return 'utf-32'
+    if bstartswith((codecs.BOM_UTF16_BE, codecs.BOM_UTF16_LE)):
+        return 'utf-16'
+    if bstartswith(codecs.BOM_UTF8):
+        return 'utf-8-sig'
+
+    if len(b) >= 4:
+        if not b[0]:
+            # 00 00 -- -- - utf-32-be
+            # 00 XX -- -- - utf-16-be
+            return 'utf-16-be' if b[1] else 'utf-32-be'
+        if not b[1]:
+            # XX 00 00 00 - utf-32-le
+            # XX 00 00 XX - utf-16-le
+            # XX 00 XX -- - utf-16-le
+            return 'utf-16-le' if b[2] or b[3] else 'utf-32-le'
+    elif len(b) == 2:
+        if not b[0]:
+            # 00 XX - utf-16-be
+            return 'utf-16-be'
+        if not b[1]:
+            # XX 00 - utf-16-le
+            return 'utf-16-le'
+    # default
+    return 'utf-8'
 
 
 class BaseException(Exception):
@@ -116,7 +151,7 @@ class JSONLibraryException(BaseException):
     library = 'json'
 
 
-def loads(text, **kwargs):
+def loads(text, *args, **kwargs):
     ''' Deserialize `text` (a `str` or `unicode` instance containing a JSON
     document with Python or JavaScript like comments) to a Python object.
 
@@ -126,30 +161,16 @@ def loads(text, **kwargs):
     :returns: dict or list.
     '''
 
-    if six.PY2:
-        text = six.text_type(text, 'utf-8')
-
-    regex = r'\s*(#|\/{2}).*$'
-    regex_inline = r'(:?(?:\s)*([A-Za-z\d\.{}]*)|((?<=\").*\"),?)(?:\s)*(((#|(\/{2})).*)|)$'
-    lines = text.split('\n')
-
-    for index, line in enumerate(lines):
-        if re.search(regex, line):
-            if re.search(r'^' + regex, line, re.IGNORECASE):
-                lines[index] = ""
-            elif re.search(regex_inline, line):
-                lines[index] = re.sub(regex_inline, r'\1', line)
+    if isinstance(text, (bytes, bytearray)):
+        text = text.decode(detect_encoding(text), 'surrogatepass')
 
     try:
         parsed = parser.parse(text)
         final_text = serializer.reconstruct(parsed)
     except lark.exceptions.UnexpectedCharacters:
-        raise ParserException('Unable to parse text')
+        raise ValueError('Unable to parse text', text)
 
-    try:
-        return json.loads(final_text, **kwargs)
-    except Exception as e:
-        raise JSONLibraryException(e)
+    return json.loads(final_text, *args, **kwargs)
 
 
 def dumps(obj, **kwargs):
@@ -163,10 +184,7 @@ def dumps(obj, **kwargs):
     :returns str: serialized string.
     '''
 
-    try:
-        return json.dumps(obj, **kwargs)
-    except Exception as e:
-        raise JSONLibraryException(e)
+    return json.dumps(obj, **kwargs)
 
 
 def load(fp, **kwargs):
