@@ -9,7 +9,7 @@ from setuptools import setup, find_packages
 __version__ = '.'.join(map(str, (0, 8, 2)))
 
 install_requires = [
-    'lark-parser>=0.7.1'
+    'lark-parser>=0.7.1,<0.8.0'
 ]
 if sys.version_info <= (2, 6):
     install_requires.append('simplejson')
