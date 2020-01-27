@@ -6,7 +6,7 @@ import sys
 from setuptools import setup, find_packages
 
 
-__version__ = '.'.join(map(str, (0, 8, 2)))
+__version__ = '.'.join(map(str, (0, 8, 3)))
 
 install_requires = [
     'lark-parser>=0.7.1,<0.8.0'
