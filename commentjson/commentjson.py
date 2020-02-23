@@ -43,7 +43,7 @@ parser = Lark('''
     pair   : string ":" value
     string : ESCAPED_STRING
 
-    COMMENT: /(#|\/\/)[^\\n]*/
+    COMMENT: /(#|\\/\\/)[^\\n]*/
 
     %import common.ESCAPED_STRING
     %import common.SIGNED_NUMBER
