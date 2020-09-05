@@ -26,7 +26,9 @@ except ImportError:
 import lark
 
 from lark import Lark
+from lark.lexer import Token
 from lark.reconstruct import Reconstructor
+from lark.tree import Tree
 
 
 parser = Lark('''
@@ -38,12 +40,13 @@ parser = Lark('''
           | "true"             -> true
           | "false"            -> false
           | "null"             -> null
-    array  : "[" [value ("," value)* ","?] "]"
-    object : "{" [pair ("," pair)* ","?] "}"
+    array  : "[" [value ("," value)*] TRAILING_COMMA? "]"
+    object : "{" [pair ("," pair)*]  TRAILING_COMMA? "}"
     pair   : string ":" value
     string : ESCAPED_STRING
 
     COMMENT: /(#|\\/\\/)[^\\n]*/
+    TRAILING_COMMA: ","
 
     %import common.ESCAPED_STRING
     %import common.SIGNED_NUMBER
@@ -151,6 +154,15 @@ class JSONLibraryException(BaseException):
     library = 'json'
 
 
+def _remove_trailing_commas(tree):
+    if isinstance(tree, Tree):
+        tree.children = [
+            _remove_trailing_commas(ch) for ch in tree.children
+                if not (isinstance(ch, Token) and ch.type == 'TRAILING_COMMA')
+        ]
+    return tree
+
+
 def loads(text, *args, **kwargs):
     ''' Deserialize `text` (a `str` or `unicode` instance containing a JSON
     document with Python or JavaScript like comments) to a Python object.
@@ -165,7 +177,7 @@ def loads(text, *args, **kwargs):
         text = text.decode(detect_encoding(text), 'surrogatepass')
 
     try:
-        parsed = parser.parse(text)
+        parsed = _remove_trailing_commas(parser.parse(text))
         final_text = serializer.reconstruct(parsed)
     except lark.exceptions.UnexpectedCharacters:
         raise ValueError('Unable to parse text', text)
