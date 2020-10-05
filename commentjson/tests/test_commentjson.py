@@ -20,7 +20,8 @@ class TestCommentJson(unittest.TestCase):
                       'string_with_inline_comment',
                       'inline_has_special_characters',
                       'array_with_hash',
-                      'inline_last_quote')
+                      'inline_last_quote',
+                      'trailing_comma')
 
         for file_ in self.files:
             fpath = os.path.join(self.path, file_)
