@@ -53,7 +53,7 @@ parser = Lark('''
     %import common.WS
     %ignore WS
     %ignore COMMENT
-''', maybe_placeholders=False)
+''', maybe_placeholders=False, parser='lalr')
 
 serializer = Reconstructor(parser)
 
