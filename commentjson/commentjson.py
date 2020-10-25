@@ -36,7 +36,7 @@ parser = Lark('''
     ?value: object
           | array
           | string
-          | SIGNED_NUMBER      -> number
+          | SIGNED_NUMBER_NAN  -> number
           | "true"             -> true
           | "false"            -> false
           | "null"             -> null
@@ -47,6 +47,8 @@ parser = Lark('''
 
     COMMENT: /(#|\\/\\/)[^\\n]*/
     TRAILING_COMMA: ","
+
+    SIGNED_NUMBER_NAN: SIGNED_NUMBER | "NaN"
 
     %import common.ESCAPED_STRING
     %import common.SIGNED_NUMBER
