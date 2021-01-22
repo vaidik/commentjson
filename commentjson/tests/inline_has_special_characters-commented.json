@@ -7,6 +7,9 @@
             "name_cn": "机场",  # Has special characters
             "display": false
         },
+        /*
+        Special characters
+        */
         {
             "url": "text",
             "valueString": "ID for spørgeskemabesvarelse", # Danish

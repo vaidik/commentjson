@@ -5,6 +5,9 @@
     "key3.1": 3, // testing comment
     "key4": { # testing comment
         # Testing comment 1
+        /*
+            testing comment
+        */
         # Testing comment 2
         "key4_1": 1 # testing comment
     }, # testing comment

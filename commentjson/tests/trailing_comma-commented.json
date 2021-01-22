@@ -1,5 +1,7 @@
 {
-    "a": 1,
+    "a": 1, /*
+                testing comment
+            */
     "c": {
         # d is cool
         "d": "4.3",

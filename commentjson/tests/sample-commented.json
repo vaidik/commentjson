@@ -11,6 +11,10 @@
             "3": "3"
         },
         "f": "some value" // some other stupid comment
+        /*
+            some other stupid comment
+            this time multine
+        */
     },
     "b": 2 # b inline comment
 }
