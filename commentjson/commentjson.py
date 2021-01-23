@@ -214,6 +214,10 @@ def load(fp, **kwargs):
 
     try:
         return loads(fp.read(), **kwargs)
+    except ValueError:
+        # pass through ValueError since that likely just indicates a bad
+        # JSON file and ValueError is how the json library signals that.
+        raise
     except Exception as e:
         raise JSONLibraryException(e)
 
