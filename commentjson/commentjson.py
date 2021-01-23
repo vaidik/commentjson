@@ -45,7 +45,8 @@ parser = Lark('''
     pair   : string ":" value
     string : ESCAPED_STRING
 
-    COMMENT: /(#|\\/\\/)[^\\n]*/
+    COMMENT: "/*" /(.|\\n)+?/ "*/"
+           | /(#|\\/\\/)[^\\n]*/
     TRAILING_COMMA: ","
 
     %import common.ESCAPED_STRING

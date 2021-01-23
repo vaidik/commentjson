@@ -1,5 +1,8 @@
+/*
+    testing comment
+*/
 {
-    "key1": 1,
+    "key1": 1, /* testing comment */
     "key2": "1",
     "key3": {
         "key3.1": 3 // testing comment
